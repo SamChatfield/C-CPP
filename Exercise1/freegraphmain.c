@@ -34,11 +34,11 @@ int main(int argc, const char *argv[])
 
     // to test only on trees, remove the following
     // assignments that turn the tree into a graph
-    // p1->x = p5;
-    // p2->y = p4;
-    // p2->z = p2;
-    // p6->y = p5;
-    // p6->z = p6;
+    p1->x = p5;
+    p2->y = p4;
+    p2->z = p2;
+    p6->y = p5;
+    p6->z = p6;
 
     if(sum(p6) == 157222)
         printf("Yay. Test passed.\n");
@@ -46,7 +46,7 @@ int main(int argc, const char *argv[])
         printf("Grr. Test failed.\n");
 
     // valgrind should report no leaks after this:
-    deallocate(p6);
+    // deallocate(p6);
 
     return 0;
 }

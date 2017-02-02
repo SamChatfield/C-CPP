@@ -16,29 +16,45 @@ struct ListNode {
     struct N *data;
 };
 
-struct List *listadd(struct List *list, struct N *data);
+// struct List *listadd(struct List *list, struct N *data);
+void listadd(struct List *list, struct N *data);
 int listcontains(struct List *list, struct N *data);
 long sumrec(struct N *p, struct List *visited);
 void deallocrec(struct N *p);
+void dealloclist(struct List *list);
 
-struct List *listadd(struct List *list, struct N *data) {
-    // Create the new node that will go on the end
+// struct List *listadd(struct List *list, struct N *data) {
+//     // Create the new node that will go on the end
+//     struct ListNode *new = malloc(sizeof(struct ListNode));
+//     new->next = NULL;
+//     new->data = data;
+//
+//     // If the list is empty then create it with the new node
+//     // Else just link the new one to the end and move the last pointer along
+//     if (!(list->head) && !(list->last)) {
+//         list->head = new;
+//         list->last = new;
+//     } else {
+//         // Link the current last node to the new one
+//         list->last->next = new;
+//         // Make the pointer to the last node point to the new last (the new node)
+//         list->last = new;
+//     }
+//     return list;
+// }
+
+void listadd(struct List *list, struct N * data) {
     struct ListNode *new = malloc(sizeof(struct ListNode));
     new->next = NULL;
     new->data = data;
 
-    // If the list is empty then create it with the new node
-    // Else just link the new one to the end and move the last pointer along
     if (!(list->head) && !(list->last)) {
         list->head = new;
         list->last = new;
     } else {
-        // Link the current last node to the new one
         list->last->next = new;
-        // Make the pointer to the last node point to the new last (the new node)
         list->last = new;
     }
-    return list;
 }
 
 // Return 0 if list starting at head doesn't contain graph node pointer data
@@ -60,6 +76,7 @@ long sum(struct N *p) {
     visited->head = NULL;
     visited->last = NULL;
     long result = sumrec(p, visited);
+    dealloclist(visited);
     return result;
 }
 
@@ -67,7 +84,8 @@ long sum(struct N *p) {
 long sumrec(struct N *p, struct List *visited) {
     // If the graph node isn't null and hasn't been visited then move to it
     if (p && !listcontains(visited, p)) {
-        visited = listadd(visited, p);
+        // visited = listadd(visited, p);
+        listadd(visited, p);
         return
             p->data +
             sumrec(p->x, visited) +
@@ -83,12 +101,21 @@ void deallocate(struct N *p) {
 
 void deallocrec(struct N *p) {
     if (p) {
-        struct N *x = p->x;
-        struct N *y = p->y;
-        struct N *z = p->z;
-        deallocrec(x);
-        deallocrec(y);
-        deallocrec(z);
+        deallocrec(p->x);
+        deallocrec(p->y);
+        deallocrec(p->z);
         free(p);
     }
+}
+
+void dealloclist(struct List *list) {
+    struct ListNode *head = list->head;
+    struct ListNode *current;
+    while (head) {
+        current = head;
+        head = head->next;
+        free(current);
+    }
+    free(list);
+    printf("List freed\n");
 }
