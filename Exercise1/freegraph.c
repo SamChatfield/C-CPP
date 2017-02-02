@@ -3,9 +3,6 @@
 #include "freegraph.h"
 #include <stdlib.h>
 
-// Testing purposes TODO remove this
-#include <stdio.h>
-
 struct List {
     struct ListNode *head;
     struct ListNode *last;

@@ -17,10 +17,10 @@ struct N *mknode(struct N *xp, struct N *yp, struct N *zp, long n)
 
 int main(int argc, const char *argv[])
 {
-    struct N *p1, *p2, *p3, *p4, *p5, *p6;
-
-    // construct a tree for testing:
-
+  struct N *p1, *p2, *p3, *p4, *p5, *p6;
+    
+    // construct a tree for testing: 
+    
     p1 = mknode(NULL, NULL, NULL, 1);
     p2 = mknode(NULL, NULL, NULL, 10);
     p3 = mknode(NULL, NULL, NULL, 100);
@@ -38,15 +38,17 @@ int main(int argc, const char *argv[])
     p2->y = p4;
     p2->z = p2;
     p6->y = p5;
-    p6->z = p6;
+    p6->z = p6; 
 
     if(sum(p6) == 157222)
         printf("Yay. Test passed.\n");
     else
         printf("Grr. Test failed.\n");
-
+    
     // valgrind should report no leaks after this:
     deallocate(p6);
 
     return 0;
 }
+
+
