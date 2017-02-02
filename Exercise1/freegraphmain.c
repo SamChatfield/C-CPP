@@ -46,7 +46,7 @@ int main(int argc, const char *argv[])
         printf("Grr. Test failed.\n");
 
     // valgrind should report no leaks after this:
-    // deallocate(p6);
+    deallocate(p6);
 
     return 0;
 }

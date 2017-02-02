@@ -20,7 +20,7 @@ struct ListNode {
 void listadd(struct List *list, struct N *data);
 int listcontains(struct List *list, struct N *data);
 long sumrec(struct N *p, struct List *visited);
-void deallocrec(struct N *p);
+void deallocrec(struct N *p, struct List *visited);
 void dealloclist(struct List *list);
 
 // struct List *listadd(struct List *list, struct N *data) {
@@ -96,14 +96,19 @@ long sumrec(struct N *p, struct List *visited) {
 }
 
 void deallocate(struct N *p) {
-    deallocrec(p);
+    struct List *visited = malloc(sizeof(struct List));
+    visited->head = NULL;
+    visited->last = NULL;
+    deallocrec(p, visited);
+    dealloclist(visited);
 }
 
-void deallocrec(struct N *p) {
-    if (p) {
-        deallocrec(p->x);
-        deallocrec(p->y);
-        deallocrec(p->z);
+void deallocrec(struct N *p, struct List *visited) {
+    if (p && !listcontains(visited, p)) {
+        listadd(visited, p);
+        deallocrec(p->x, visited);
+        deallocrec(p->y, visited);
+        deallocrec(p->z, visited);
         free(p);
     }
 }
