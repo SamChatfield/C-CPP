@@ -53,6 +53,7 @@ int listcontains(struct List *list, struct N *data) {
     return 0;
 }
 
+// Create the linked list of visited graph nodes and begin the recursive sum function
 long sum(struct N *p) {
     struct List *visited = malloc(sizeof(struct List));
     visited->head = NULL;
@@ -60,16 +61,16 @@ long sum(struct N *p) {
     return sumrec(p, visited);
 }
 
+// Recurse over the graph and the list of visited nodes
 long sumrec(struct N *p, struct List *visited) {
-    if (p) {
-        if (!listcontains(visited, p)) {
-            visited = listadd(visited, p);
-            return
-                p->data +
-                sumrec(p->x, visited) +
-                sumrec(p->y, visited) +
-                sumrec(p->z, visited);
-        }
+    // If the graph node isn't null and hasn't been visited then move to it
+    if (p && !listcontains(visited, p)) {
+        visited = listadd(visited, p);
+        return
+            p->data +
+            sumrec(p->x, visited) +
+            sumrec(p->y, visited) +
+            sumrec(p->z, visited);
     }
     return 0L;
 }
