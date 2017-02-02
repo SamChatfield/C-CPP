@@ -19,6 +19,7 @@ struct ListNode {
 struct List *listadd(struct List *list, struct N *data);
 int listcontains(struct List *list, struct N *data);
 long sumrec(struct N *p, struct List *visited);
+void deallocrec(struct N *p);
 
 struct List *listadd(struct List *list, struct N *data) {
     // Create the new node that will go on the end
@@ -58,7 +59,8 @@ long sum(struct N *p) {
     struct List *visited = malloc(sizeof(struct List));
     visited->head = NULL;
     visited->last = NULL;
-    return sumrec(p, visited);
+    long result = sumrec(p, visited);
+    return result;
 }
 
 // Recurse over the graph and the list of visited nodes
@@ -75,6 +77,18 @@ long sumrec(struct N *p, struct List *visited) {
     return 0L;
 }
 
-void deallocate(struct N *ap) {
+void deallocate(struct N *p) {
+    deallocrec(p);
+}
 
+void deallocrec(struct N *p) {
+    if (p) {
+        struct N *x = p->x;
+        struct N *y = p->y;
+        struct N *z = p->z;
+        deallocrec(x);
+        deallocrec(y);
+        deallocrec(z);
+        free(p);
+    }
 }
