@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Environment structure as a list where each node has the variable name and
+// Environment structure as a stack where each node has the variable name and
 // its corresponding value
 struct env {
     char var[8];
@@ -30,13 +30,8 @@ struct env *envadd(struct env *en, char *var, int val) {
     struct env *this = malloc(sizeof(struct env));
     strncpy(this->var, var, 8);
     this->val = val;
-    this->next = NULL;
-    if (en) {
-        en->next = this;
-    } else {
-        en = this;
-    }
-    return en;
+    this->next = en;
+    return this;
 }
 
 int evalexp(struct exp *e) {
@@ -57,7 +52,7 @@ int evalexpenv(struct exp *e, struct env *en) {
         case isvar:
             return lookup(en, e->var);
         case islet: {
-            struct env *newen = envadd(en, e->bvar, evalexp(e->bexp));
+            struct env *newen = envadd(en, e->bvar, evalexpenv(e->bexp, en));
             return evalexpenv(e->body, newen);
         }
     }

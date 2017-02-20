@@ -124,5 +124,18 @@ int main(int argc, const char *argv[])
   em2e = mklet("y", em2c, em2d); // (= y (+ 4 2) (= x (* 6 3) (* x y)))
   printf("test em2: %d\n", evalexp(em2e)); // should be 108
 
+  struct exp *ey1, *ey2, *ey3;
+
+  ey1 = mklet("y", mkconstant(10), mkvar("y"));
+
+  l = NULL;
+  l = cons(mkvar("y"), l);
+  l = cons(ey1, l);
+  l = cons(mkvar("y"), l);
+  ey2 = mkopapp(isplus, l);
+
+  ey3 = mklet("y", mkconstant(2), ey2);
+  printf("test ey: %d\n", evalexp(ey3)); //should print 14
+
   return 0;
 }
