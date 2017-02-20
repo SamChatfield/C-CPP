@@ -43,24 +43,6 @@ int evalexp(struct exp *e) {
     return evalexpenv(e, NULL);
 }
 
-int evalplus(struct explist *l, struct env *en) {
-    int result = 0;
-    while (l) {
-        result += evalexpenv(l->head, en);
-        l = l->tail;
-    }
-    return result;
-}
-
-int evalmult(struct explist *l, struct env *en) {
-    int result = 1;
-    while (l) {
-        result *= evalexpenv(l->head, en);
-        l = l->tail;
-    }
-    return result;
-}
-
 int evalexpenv(struct exp *e, struct env *en) {
     switch (e->tag) {
         case isconstant:
@@ -79,4 +61,22 @@ int evalexpenv(struct exp *e, struct env *en) {
             return evalexpenv(e->body, newen);
         }
     }
+}
+
+int evalplus(struct explist *l, struct env *en) {
+    int result = 0;
+    while (l) {
+        result += evalexpenv(l->head, en);
+        l = l->tail;
+    }
+    return result;
+}
+
+int evalmult(struct explist *l, struct env *en) {
+    int result = 1;
+    while (l) {
+        result *= evalexpenv(l->head, en);
+        l = l->tail;
+    }
+    return result;
 }
