@@ -2,13 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// TODO remove
-#include <stdio.h>
-
-struct env;
-int evalplus(struct explist *l);
-int evalmult(struct explist *l);
-
 // Environment structure as a list where each node has the variable name and
 // its corresponding value
 struct env {
@@ -17,52 +10,73 @@ struct env {
     struct env *next;
 };
 
-int lookup(struct env *env, char var[8]) {
-    while (env) {
-        if (strcmp(env->var, var) == 0) {
-            return env->val;
+int evalplus(struct explist *l, struct env *en);
+int evalmult(struct explist *l, struct env *en);
+int evalexpenv(struct exp *e, struct env *en);
+struct env *envadd(struct env *en, char *var, int val);
+
+int lookup(struct env *en, char *var) {
+    while (en) {
+        if (strncmp(en->var, var, 8) == 0) {
+            return en->val;
         } else {
-            env = env->next;
+            en = en->next;
         }
     }
-    printf("Error: variable not found\n");
     exit(1);
 }
 
+struct env *envadd(struct env *en, char *var, int val) {
+    struct env *this = malloc(sizeof(struct env));
+    strncpy(this->var, var, 8);
+    this->val = val;
+    this->next = NULL;
+    if (en) {
+        en->next = this;
+    } else {
+        en = this;
+    }
+    return en;
+}
+
 int evalexp(struct exp *e) {
+    return evalexpenv(e, NULL);
+}
+
+int evalplus(struct explist *l, struct env *en) {
+    int result = 0;
+    while (l) {
+        result += evalexpenv(l->head, en);
+        l = l->tail;
+    }
+    return result;
+}
+
+int evalmult(struct explist *l, struct env *en) {
+    int result = 1;
+    while (l) {
+        result *= evalexpenv(l->head, en);
+        l = l->tail;
+    }
+    return result;
+}
+
+int evalexpenv(struct exp *e, struct env *en) {
     switch (e->tag) {
         case isconstant:
             return e->constant;
         case isopapp:
             switch (e->op) {
                 case isplus:
-                    return evalplus(e->exps);
+                    return evalplus(e->exps, en);
                 case ismult:
-                    return evalmult(e->exps);
+                    return evalmult(e->exps, en);
             }
         case isvar:
-            // Not implemented
-            return -1;
-        case islet:
-            // Not implemented
-            return -1;
+            return lookup(en, e->var);
+        case islet: {
+            struct env *newen = envadd(en, e->bvar, evalexp(e->bexp));
+            return evalexpenv(e->body, newen);
+        }
     }
-}
-
-int evalplus(struct explist *l) {
-    int result = 0;
-    while (l) {
-        result += evalexp(l->head);
-        l = l->tail;
-    }
-    return result;
-}
-
-int evalmult(struct explist *l) {
-    int result = 1;
-    while (l) {
-        result *= evalexp(l->head);
-        l = l->tail;
-    }
-    return result;
 }
