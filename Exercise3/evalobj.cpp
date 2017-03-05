@@ -2,9 +2,6 @@
 using namespace std;
 #include "evalobj.h"
 #include <stdlib.h>
-#include <string.h>
-
-#include <iostream>
 
 // Environment structure as a stack where each node has the variable name and
 // its corresponding value
