@@ -30,6 +30,7 @@
 freegraph
 evalexp
 evalobj
+templatesast
 
 # Debug files
 *.dSYM/
